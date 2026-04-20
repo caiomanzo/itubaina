@@ -3,43 +3,40 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    public Dictionary<Vector2Int, Tile> map = new Dictionary<Vector2Int, Tile>();
+    [Header("Configuração das Camadas")]
+    public LayerMask obstacleLayer;
 
-    void Awake()
+    private Dictionary<Vector2Int, GridEntity> entitiesOnGrid = new Dictionary<Vector2Int, GridEntity>();
+    public bool CheckWalkability(Vector2Int targetPosition, out GridEntity occupant)
     {
-        Tile[] everyTile = FindObjectsByType<Tile>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        occupant = null;
 
-        foreach (Tile tile in everyTile)
+        // Checa Parede
+        Vector2 checkPos = new Vector2(targetPosition.x, targetPosition.y);
+        Collider2D hit = Physics2D.OverlapPoint(checkPos, obstacleLayer);
+
+        if (hit != null) return false; // Parede
+
+        // Checa Entidade
+        if (entitiesOnGrid.TryGetValue(targetPosition, out occupant))
         {
-            tile.coordinate = new Vector2Int(Mathf.RoundToInt(tile.transform.position.x), Mathf.RoundToInt(tile.transform.position.y));
-
-            if (!map.ContainsKey(tile.coordinate))
-            {
-                map.Add(tile.coordinate, tile);
-            }
-        }
-    }
-
-    public Tile GetTileAt(Vector2Int pos)
-    {
-        if (map.TryGetValue(pos, out Tile tile)) return tile;
-        return null;
-    }
-
-    // Verifica se o tile está livre para andar
-    public bool CheckWalkability(Vector2Int target, out GridEntity foundOccupant)
-    {
-        foundOccupant = null;
-
-        if (map.TryGetValue(target, out Tile tile))
-        {
-            if (tile.type != TileType.Floor) return false;
-
-            foundOccupant = tile.occupant;
-
-            return foundOccupant == null;
+            return false; // Espaco ocupado
         }
 
+        return true; // Espaco livre
+    }
+
+    // Métodos para as Entidades se registrarem
+    public void RegisterEntity(Vector2Int pos, GridEntity entity) => entitiesOnGrid[pos] = entity;
+    public void UnregisterEntity(Vector2Int pos) => entitiesOnGrid.Remove(pos);
+    public void ClearAllEntities() => entitiesOnGrid.Clear();
+
+    public bool CheckIfOccupantIsMe(Vector2Int pos, GridEntity me)
+    {
+        if (entitiesOnGrid.TryGetValue(pos, out GridEntity occupant))
+        {
+            return occupant == me;
+        }
         return false;
     }
 }
