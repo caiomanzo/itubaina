@@ -14,7 +14,6 @@ public class LevelSpawner : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
     public GameObject swordPrefab;
-    public GameObject coinPrefab;
 
     [Header("Configurações de Jogo")]
     public int enemyCount = 3;
@@ -30,7 +29,7 @@ public class LevelSpawner : MonoBehaviour
         gridManager.ClearAllEntities();
 
         // Instancia o mapa
-        Instantiate(mapPrefab, Vector3.zero, Quaternion.identity);
+        Instantiate(mapPrefab, Vector3.zero, Quaternion.identity, gridManager.transform);
 
         // Escaneia o mapa para identificar chao e parede
         ScanAvailableSpace();
@@ -41,8 +40,6 @@ public class LevelSpawner : MonoBehaviour
 
         SpawnAt(playerPrefab, playerStartPos);
         validTiles.Remove(playerStartPos);
-
-        SpawnAt(coinPrefab, new Vector2Int(1, 1));
 
         // Spawna Inimigos
         for (int i = 0; i < enemyCount; i++)
@@ -95,7 +92,7 @@ public class LevelSpawner : MonoBehaviour
 
     private void SpawnAt(GameObject prefab, Vector2Int position)
     {
-        GameObject newObj = Instantiate(prefab, new Vector3(position.x, position.y, 0), Quaternion.identity);
+        GameObject newObj = Instantiate(prefab, new Vector3(position.x, position.y, 0), Quaternion.identity, gridManager.transform);
 
         GridEntity entity = newObj.GetComponent<GridEntity>();
         if (entity != null)

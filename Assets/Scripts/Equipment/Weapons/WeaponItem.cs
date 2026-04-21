@@ -2,7 +2,16 @@ using UnityEngine;
 
 public class WeaponItem : MonoBehaviour, ICollectible
 {
+
     public WeaponData weaponStats;
+
+    public void SetupValue(int min, int max)
+    {
+        if (weaponStats != null)
+        {
+            weaponStats.durability = Random.Range(min, max + 1);
+        }
+    }
 
     public bool Collect(Player player)
     {

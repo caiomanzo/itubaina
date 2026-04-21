@@ -452,6 +452,7 @@ GameObject:
   m_Component:
   - component: {fileID: 814493536}
   - component: {fileID: 814493535}
+  - component: {fileID: 814493538}
   - component: {fileID: 814493537}
   m_Layer: 0
   m_Name: GameManager
@@ -508,9 +509,20 @@ MonoBehaviour:
   playerPrefab: {fileID: 1374942672065849238, guid: 793ec1fa32a70ff4995f81ffc876ad27, type: 3}
   enemyPrefab: {fileID: 2409340515753007506, guid: cfabf17fcf15e2f4198986a75faa358a, type: 3}
   swordPrefab: {fileID: 8137271553510590167, guid: d1267525d5aa35d47bede20cbee741cd, type: 3}
-  coinPrefab: {fileID: 2993073105566122302, guid: a92f9708671e52142898c7bcd9b82388, type: 3}
   enemyCount: 3
   swordCount: 2
+--- !u!114 &814493538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 814493534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bec500b93f9127d40a0f6d8db21fe066, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &852911644
 GameObject:
   m_ObjectHideFlags: 0

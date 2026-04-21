@@ -10,13 +10,16 @@ public class Player : MonoBehaviour
     [Header("Player Stats")]
     private Health myHealth;
     private Inventory myInventory;
+
     private Vector2Int gridPosition => myEntity.rootPosition;
+    public Vector2Int previousGridPosition { get; private set; }
 
     void Awake()
     {
         myEntity = GetComponent<GridEntity>();
         myHealth = GetComponent<Health>();
         myInventory = GetComponent<Inventory>();
+        previousGridPosition = gridPosition;
     }
 
     void Update()
@@ -31,14 +34,13 @@ public class Player : MonoBehaviour
 
     void Walk(Vector2Int direction)
     {
+        previousGridPosition = gridPosition;
+
         Vector2Int targetPosition = gridPosition + direction;
 
-        myEntity.ClearTiles(); // Limpa posicao antiga no dicionário
-
-        // Atualiza a posicao
+        myEntity.ClearTiles();
         myEntity.rootPosition = targetPosition;
-
-        myEntity.OccupyTiles(); // Registra nova posicao
+        myEntity.OccupyTiles();
         UpdateVisualPosition();
     }
 
@@ -50,27 +52,49 @@ public class Player : MonoBehaviour
     void TryMove(Vector2Int direction)
     {
         Vector2Int targetPosition = gridPosition + direction;
+        bool actionTaken = false;
+
+        // Atualiza a referencia do grid local
+        gridManager = GetComponentInParent<GridManager>();
+        if (gridManager == null) return;
 
         if (gridManager.CheckWalkability(targetPosition, out GridEntity occupant))
         {
             Walk(direction);
+            actionTaken = true;
         }
         else if (occupant != null)
         {
-            Debug.Log($"Bati em algo: {occupant.name}");
-            // LÓGICA DE COLETA
+            // LOGICA DE COLETA
             ICollectible item = occupant.GetComponent<ICollectible>();
             if (item != null)
             {
-                if (item.Collect(this)) Walk(direction);
-                return;
+                if (item.Collect(this))
+                {
+                    Walk(direction);
+                    actionTaken = true;
+                }
             }
-
-            // LÓGICA DE COMBATE
-            Health targetHealth = occupant.GetComponent<Health>();
-            if (targetHealth != null)
+            else
             {
-                HandleCombat(targetHealth);
+                // LOGICA DE COMBATE
+                Health targetHealth = occupant.GetComponent<Health>();
+                if (targetHealth != null)
+                {
+                    HandleCombat(targetHealth);
+                    actionTaken = true;
+                }
+            }
+        }
+
+        // Processa o turno apos movimento do player
+        if (actionTaken)
+        {
+            // Chama o EntityManager da sala
+            EntityManager currentRoomManager = GetComponentInParent<EntityManager>();
+            if (currentRoomManager != null)
+            {
+                currentRoomManager.ProcessEnemyTurns();
             }
         }
     }
@@ -101,7 +125,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        // Player sem armas, toma dano tambem, mas tem vida maior
+        // Player sem armas
         if (myHealth.GetCurrentHealth() > target.GetCurrentHealth())
         {
             damageToDeal = target.GetCurrentHealth();

@@ -2,22 +2,20 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour, ICollectible
 {
-    public int minValue = 5;
-    public int maxValue = 10;
 
-    private int actualValue;
+    private int dropQuantity;
 
-    void Start()
+    public void SetupValue(int min, int max)
     {
-        this.actualValue = Random.Range(minValue, maxValue + 1);
+        dropQuantity = Random.Range(min, max + 1);
     }
 
     public bool Collect(Player player)
     {
-        Debug.Log($"O jogador achou uma moeda valendo {actualValue}!");
+        Debug.Log($"O jogador achou uma moeda valendo {dropQuantity}!");
 
         Inventory inv = player.GetComponent<Inventory>();
-        inv.AddGold(actualValue);
+        inv.AddGold(dropQuantity);
 
         GetComponent<GridEntity>()?.ClearTiles();
         Destroy(gameObject);

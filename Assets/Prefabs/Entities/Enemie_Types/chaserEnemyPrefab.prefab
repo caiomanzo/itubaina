@@ -11,10 +11,11 @@ GameObject:
   - component: {fileID: 6293155173924412072}
   - component: {fileID: 2165444481269831826}
   - component: {fileID: 2845698309525292436}
+  - component: {fileID: -5950461347198277197}
   - component: {fileID: 1384999696233950860}
   - component: {fileID: 3106361932361076490}
   m_Layer: 0
-  m_Name: enemyPrefab
+  m_Name: chaserEnemyPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106,6 +107,20 @@ MonoBehaviour:
   rootPosition: {x: 0, y: 0}
   occupiedOffsets:
   - {x: 0, y: 0}
+--- !u!114 &-5950461347198277197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2409340515753007506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed8e4b372649944ca425d91af49ee47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDamage: 1
+  necessaryTimeToAttack: 1
 --- !u!114 &1384999696233950860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,3 +150,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lootPrefab: {fileID: 2993073105566122302, guid: a92f9708671e52142898c7bcd9b82388, type: 3}
+  minDropValue: 1
+  maxDropValue: 5
